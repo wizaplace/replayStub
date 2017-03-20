@@ -57,6 +57,37 @@ class MockerTest extends TestCase
         $this->assertNull($result);
     }
 
+    public function testRecorder_simpleRecursion() {
+        $registry = new Registry(new Serializer());
+        $mocker = new Mocker($registry);
+
+        $recorder = $mocker->createRecorder(new ToBeDecorated());
+        $this->assertInstanceOf(ToBeDecorated::class, $recorder);
+        /**
+         * @var ToBeDecorated $recorder
+         */
+
+        $result = $recorder->me();
+        $this->assertInstanceOf(ToBeDecorated::class, $result);
+        $this->assertInstanceOf(ToBeDecorated::class, $result->me());
+
+        // check that the record was registered
+        $result = $registry->popRecord(new Id(ToBeDecorated::class, 'me', []));
+        $this->assertNotNull($result);
+        $this->assertInstanceOf(ToBeDecorated::class, $result->getValue());
+        // check that there is no more records
+        $result = $registry->popRecord(new Id(ToBeDecorated::class, 'me', []));
+        $this->assertNull($result);
+
+        // check that the record of the recursive mock was registered
+        $result = $registry->popRecord(new Id(ToBeDecorated::class, 'me', [], ' > 0'));
+        $this->assertNotNull($result);
+        $this->assertInstanceOf(ToBeDecorated::class, $result->getValue());
+        // check that there is no more records
+        $result = $registry->popRecord(new Id(ToBeDecorated::class, 'me', [], ' > 0'));
+        $this->assertNull($result);
+    }
+
     public function testRecorder_toString() {
         $registry = new Registry(new Serializer());
         $mocker = new Mocker($registry);
@@ -230,6 +261,10 @@ class ToBeDecorated {
 
     public static function staticFunc() : bool {
         return true;
+    }
+
+    public function me() : self {
+        return $this;
     }
 
     public function __toString() : string

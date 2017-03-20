@@ -49,6 +49,14 @@ trait Recorder
 
         self::$registry->addRecord($id, $result);
 
-        return $result->getValue();
+        $retVal = $result->getValue();
+
+        if (is_object($retVal)) {
+            static $i = 0;
+            $retVal = self::$mocker->createRecorder($retVal, self::$instanceId.' > '.$i);
+            $i++;
+        }
+
+        return $retVal;
     }
 }
