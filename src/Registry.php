@@ -38,6 +38,6 @@ class Registry
             return null;
         }
 
-        return array_pop($this->data[$key]);
+        return array_shift($this->data[$key]);
     }
 }

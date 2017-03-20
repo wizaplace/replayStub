@@ -8,6 +8,8 @@ declare(strict_types = 1);
 
 namespace RePHPlay;
 
+use ReflectionMethod;
+
 class Mocker
 {
     /**
@@ -29,10 +31,21 @@ class Mocker
         $reflection = new \ReflectionClass($decoratedObject);
 
         $phpClass =<<<EOT
-return new class(\$decoratedObject, \$this->registry) extends {$reflection->getName()} {
+return new class(\$decoratedObject, \$this->registry, "{$reflection->getName()}") extends {$reflection->getName()} {
     use \RePHPlay\Recorder;
-};
+
 EOT;
+        foreach($reflection->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
+            $static = $method->isStatic() ? 'static ' : '';
+            $args = [];
+            foreach ($method->getParameters() as $parameter) {
+                $args[] = (string) $parameter->getType(). " \${$parameter->getName()}";
+            }
+            $args = implode(', ', $args);
+            $phpClass .= "    public {$static}function {$method->getName()}($args) { return \$this->RePHPlay_Record(__FUNCTION__, func_get_args()); }\n";
+
+        }
+        $phpClass .= '};';
         return eval($phpClass);
     }
 }

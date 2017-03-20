@@ -16,13 +16,16 @@ trait Recorder
 
     private $registry;
 
-    public function __construct($decoratedObject, Registry $registry)
+    private $className;
+
+    public function __construct($decoratedObject, Registry $registry, string $className)
     {
         $this->decoratedObject = $decoratedObject;
         $this->registry = $registry;
+        $this->className = $className;
     }
 
-    public function __call(string $name, array $arguments)
+    private function RePHPlay_Record(string $name, array $arguments)
     {
         $thrown = null;
         $returned = null;
@@ -34,8 +37,7 @@ trait Recorder
 
         $result = new Result($returned, $thrown);
 
-        $id = new Id(get_called_class(), $name, $arguments);
-        var_export($id);exit;
+        $id = new Id($this->className, $name, $arguments);
 
         $this->registry->addRecord($id, $result);
 
