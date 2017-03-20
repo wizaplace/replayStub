@@ -23,7 +23,7 @@ class Mocker
     }
 
 
-    public function createRecorder($decoratedObject)
+    public function createRecorder($decoratedObject, ?string $instanceId = null)
     {
         if(!is_object($decoratedObject)) {
             throw new \InvalidArgumentException('$decoratedObject must be an object, '.gettype($decoratedObject).' given.');

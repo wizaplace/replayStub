@@ -25,11 +25,17 @@ final class Id
      */
     private $args;
 
-    public function __construct(string $class, string $method, array $args)
+    /**
+     * @var null|string
+     */
+    private $instanceId;
+
+    public function __construct(string $class, string $method, array $args, ?string $instanceId = null)
     {
         $this->class = $class;
         $this->method = $method;
         $this->args = $args;
+        $this->instanceId = $instanceId;
     }
 
     /**
@@ -54,5 +60,13 @@ final class Id
     public function getArgs(): array
     {
         return $this->args;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getInstanceId() : ?string
+    {
+        return $this->instanceId;
     }
 }
