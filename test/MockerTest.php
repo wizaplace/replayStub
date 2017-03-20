@@ -57,6 +57,26 @@ class MockerTest extends TestCase
         $this->assertNull($result);
     }
 
+    public function testRecorder_toString() {
+        $registry = new Registry(new Serializer());
+        $mocker = new Mocker($registry);
+
+        $recorder = $mocker->createRecorder(new ToBeDecorated());
+        $this->assertInstanceOf(ToBeDecorated::class, $recorder);
+        /**
+         * @var ToBeDecorated $recorder
+         */
+
+        $this->assertEquals('stringified', (string) $recorder);
+        // check that the record was registered
+        $result = $registry->popRecord(new Id(ToBeDecorated::class, '__toString', []));
+        $this->assertNotNull($result);
+        $this->assertEquals('stringified', $result->getValue());
+        // check that there is no more records
+        $result = $registry->popRecord(new Id(ToBeDecorated::class, '__toString', []));
+        $this->assertNull($result);
+    }
+
     public function testRecorder_staticCall() {
         $registry = new Registry(new Serializer());
         $mocker = new Mocker($registry);
@@ -210,6 +230,11 @@ class ToBeDecorated {
 
     public static function staticFunc() : bool {
         return true;
+    }
+
+    public function __toString() : string
+    {
+        return 'stringified';
     }
 };
 
