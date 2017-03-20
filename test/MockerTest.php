@@ -37,6 +37,26 @@ class MockerTest extends TestCase
         $this->assertNull($result);
     }
 
+    public function testRecorder_callWithExtraArgs() {
+        $registry = new Registry(new Serializer());
+        $mocker = new Mocker($registry);
+
+        $recorder = $mocker->createRecorder(new ToBeDecorated());
+        $this->assertInstanceOf(ToBeDecorated::class, $recorder);
+        /**
+         * @var ToBeDecorated $recorder
+         */
+
+        $this->assertEquals([1, '2'], $recorder->extra(1, '2'));
+        // check that the record was registered
+        $result = $registry->popRecord(new Id(ToBeDecorated::class, 'extra', [1, '2']));
+        $this->assertNotNull($result);
+        $this->assertEquals([1, '2'], $result->getValue());
+        // check that there is no more records
+        $result = $registry->popRecord(new Id(ToBeDecorated::class, 'extra', [1, '2']));
+        $this->assertNull($result);
+    }
+
     public function testRecorder_staticCall() {
         $registry = new Registry(new Serializer());
         $mocker = new Mocker($registry);
@@ -169,6 +189,10 @@ class MockerTest extends TestCase
 class ToBeDecorated {
     public function get4() {
         return 4;
+    }
+
+    public function extra() : array {
+        return func_get_args();
     }
 
     public function throwingMethod() {
