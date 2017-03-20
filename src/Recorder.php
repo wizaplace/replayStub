@@ -10,6 +10,8 @@ namespace RePHPlay;
 
 trait Recorder
 {
+    // Everything is static because it must be usable from static methods.
+    // But actually, a new anonymous class is created for each mocked object, so these can be used as instance members.
     private static $records = [];
 
     private static $decoratedObject;
@@ -18,11 +20,17 @@ trait Recorder
 
     private static $className;
 
-    public function __construct($decoratedObject, Registry $registry, string $className)
+    private static $mocker;
+
+    private static $instanceId;
+
+    public function __construct($decoratedObject, Registry $registry, string $className, Mocker $mocker, ?string $instanceId = null)
     {
         self::$decoratedObject = $decoratedObject;
         self::$registry = $registry;
         self::$className = $className;
+        self::$mocker = $mocker;
+        self::$instanceId = $instanceId;
     }
 
     private static function RePHPlay_Record(string $name, array $arguments)
@@ -37,7 +45,7 @@ trait Recorder
 
         $result = new Result($returned, $thrown);
 
-        $id = new Id(self::$className, $name, $arguments);
+        $id = new Id(self::$className, $name, $arguments, self::$instanceId);
 
         self::$registry->addRecord($id, $result);
 

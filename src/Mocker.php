@@ -31,7 +31,7 @@ class Mocker
         $reflection = new \ReflectionClass($decoratedObject);
 
         $phpClass =<<<EOT
-return new class(\$decoratedObject, \$this->registry, "{$reflection->getName()}") extends {$reflection->getName()} {
+return new class(\$decoratedObject, \$this->registry, "{$reflection->getName()}", \$this) extends {$reflection->getName()} {
     use \RePHPlay\Recorder;
 
 EOT;
