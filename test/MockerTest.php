@@ -107,7 +107,7 @@ class MockerTest extends TestCase
          * @var ToBeDecorated $recorder
          */
 
-        $this->expectException(\TypeError::classs);
+        $this->expectException(\TypeError::class);
         $recorder->idem(42);
     }
 
