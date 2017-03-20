@@ -39,11 +39,14 @@ EOT;
             $static = $method->isStatic() ? 'static ' : '';
             $args = [];
             foreach ($method->getParameters() as $parameter) {
-                $args[] = (string) $parameter->getType(). " \${$parameter->getName()}";
+                $args[] = "{$parameter->getType()} \${$parameter->getName()}";
             }
             $args = implode(', ', $args);
-            $phpClass .= "    public {$static}function {$method->getName()}($args) { return \$this->RePHPlay_Record(__FUNCTION__, func_get_args()); }\n";
-
+            $phpClass .= "    public {$static}function {$method->getName()}($args) ";
+            if ($method->hasReturnType()) {
+                $phpClass .= ": {$method->getReturnType()} ";
+            }
+            $phpClass .= "{ return self::RePHPlay_Record(__FUNCTION__, func_get_args()); }\n";
         }
         $phpClass .= '};';
         return eval($phpClass);

@@ -37,6 +37,26 @@ class MockerTest extends TestCase
         $this->assertNull($result);
     }
 
+    public function testRecorder_staticCall() {
+        $registry = new Registry(new Serializer());
+        $mocker = new Mocker($registry);
+
+        $recorder = $mocker->createRecorder(new ToBeDecorated());
+        $this->assertInstanceOf(ToBeDecorated::class, $recorder);
+        /**
+         * @var ToBeDecorated $recorder
+         */
+
+        $this->assertEquals(true, $recorder::staticFunc());
+        // check that the record was registered
+        $result = $registry->popRecord(new Id(ToBeDecorated::class, 'staticFunc', []));
+        $this->assertNotNull($result);
+        $this->assertEquals(true, $result->getValue());
+        // check that there is no more records
+        $result = $registry->popRecord(new Id(ToBeDecorated::class, 'staticFunc', []));
+        $this->assertNull($result);
+    }
+
     public function testRecorder_callWithException() {
         $registry = new Registry(new Serializer());
         $mocker = new Mocker($registry);
@@ -155,13 +175,17 @@ class ToBeDecorated {
         throw new ExpectedException();
     }
 
-    public function idem(string $str) {
+    public function idem(string $str) : string {
         return $str;
     }
 
     public function increment() {
         static $i = 0;
         return $i++;
+    }
+
+    public static function staticFunc() : bool {
+        return true;
     }
 };
 

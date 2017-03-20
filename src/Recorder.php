@@ -10,36 +10,36 @@ namespace RePHPlay;
 
 trait Recorder
 {
-    private $records = [];
+    private static $records = [];
 
-    private $decoratedObject;
+    private static $decoratedObject;
 
-    private $registry;
+    private static $registry;
 
-    private $className;
+    private static $className;
 
     public function __construct($decoratedObject, Registry $registry, string $className)
     {
-        $this->decoratedObject = $decoratedObject;
-        $this->registry = $registry;
-        $this->className = $className;
+        self::$decoratedObject = $decoratedObject;
+        self::$registry = $registry;
+        self::$className = $className;
     }
 
-    private function RePHPlay_Record(string $name, array $arguments)
+    private static function RePHPlay_Record(string $name, array $arguments)
     {
         $thrown = null;
         $returned = null;
         try {
-            $returned = call_user_func_array([$this->decoratedObject, $name], $arguments);
+            $returned = call_user_func_array([self::$decoratedObject, $name], $arguments);
         } catch (\Exception $e) {
             $thrown = $e;
         }
 
         $result = new Result($returned, $thrown);
 
-        $id = new Id($this->className, $name, $arguments);
+        $id = new Id(self::$className, $name, $arguments);
 
-        $this->registry->addRecord($id, $result);
+        self::$registry->addRecord($id, $result);
 
         return $result->getValue();
     }
