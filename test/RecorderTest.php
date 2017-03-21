@@ -56,7 +56,8 @@ class RecorderTest extends TestCase
         $this->assertNull($result);
     }
 
-    public function test_simpleRecursion() {
+    public function test_simpleChild()
+    {
         $registry = new Registry(new Serializer());
         $factory = new RecorderFactory($registry);
 
@@ -78,7 +79,7 @@ class RecorderTest extends TestCase
         $result = $registry->popRecord(new CallId(ToBeDecorated::class, 'me', []));
         $this->assertNull($result);
 
-        // check that the record of the recursive mock was registered
+        // check that the record of the child mock was registered
         $result = $registry->popRecord(new CallId(ToBeDecorated::class, 'me', [], ' > 0'));
         $this->assertNotNull($result);
         $this->assertInstanceOf(ToBeDecorated::class, $result->getValue());

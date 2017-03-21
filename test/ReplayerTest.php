@@ -146,10 +146,11 @@ class ReplayerTest extends TestCase
         $replayer->throwingMethod();
     }
 
-    public function test_simpleRecursion() {
+    public function test_simpleChild()
+    {
         $registry = new Registry(new Serializer());
         $registry->addRecord(new CallId(ToBeImplemented::class, 'me2', []), new Result(new ToBeDecorated()));
-        $registry->addRecord(new CallId(ToBeDecorated::class, '__toString', [], ' > 0'), new Result('recursive_stringified'));
+        $registry->addRecord(new CallId(ToBeDecorated::class, '__toString', [], ' > 0'), new Result('child_stringified'));
         $factory = new ReplayerFactory($registry);
 
         $replayer = $factory->createReplayer(ToBeImplemented::class);
@@ -161,7 +162,7 @@ class ReplayerTest extends TestCase
         $result = $replayer->me2();
         $this->assertInstanceOf(ToBeImplemented::class, $result);
 
-        $this->assertEquals('recursive_stringified', (string) $result);
+        $this->assertEquals('child_stringified', (string)$result);
     }
 }
 
