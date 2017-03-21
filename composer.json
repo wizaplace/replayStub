@@ -16,5 +16,8 @@
     "require": {},
     "require-dev": {
         "phpunit/phpunit": "^6.0"
+    },
+    "scripts": {
+        "test": "docker run --rm -v $PWD:/usr/src/myapp rephplay php /usr/src/myapp/vendor/bin/phpunit --configuration /usr/src/myapp/phpunit.xml"
     }
 }

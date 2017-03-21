@@ -8,14 +8,13 @@ declare(strict_types = 1);
 
 namespace RePHPlay\Test;
 
-use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\TestCase;
 use RePHPlay\Id;
 use RePHPlay\Mocker;
 use RePHPlay\Registry;
 use RePHPlay\Serializer;
 
-class MockerTest extends TestCase
+class RecorderTest extends TestCase
 {
     public function testRecorder_simpleCall() {
         $registry = new Registry(new Serializer());
