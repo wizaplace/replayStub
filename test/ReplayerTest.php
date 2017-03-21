@@ -9,8 +9,7 @@ declare(strict_types = 1);
 namespace RePHPlay\Test;
 
 use PHPUnit\Framework\TestCase;
-use RePHPlay\Id;
-use RePHPlay\RecorderFactory;
+use RePHPlay\CallId;
 use RePHPlay\Registry;
 use RePHPlay\ReplayerFactory;
 use RePHPlay\Result;
@@ -21,7 +20,7 @@ class ReplayerTest extends TestCase
 {
     public function test_simpleCall() {
         $registry = new Registry(new Serializer());
-        $registry->addRecord(new Id(ToBeImplemented::class, 'get4', []), new Result(4));
+        $registry->addRecord(new CallId(ToBeImplemented::class, 'get4', []), new Result(4));
         $factory = new ReplayerFactory($registry);
 
         $replayer = $factory->createReplayer(ToBeImplemented::class);
@@ -38,7 +37,7 @@ class ReplayerTest extends TestCase
 
     public function test_toString() {
         $registry = new Registry(new Serializer());
-        $registry->addRecord(new Id(ToBeImplemented::class, '__toString', []), new Result('stringified'));
+        $registry->addRecord(new CallId(ToBeImplemented::class, '__toString', []), new Result('stringified'));
         $factory = new ReplayerFactory($registry);
 
         $replayer = $factory->createReplayer(ToBeImplemented::class);
@@ -52,7 +51,7 @@ class ReplayerTest extends TestCase
 
     public function test_argsTypeSafety() {
         $registry = new Registry(new Serializer());
-        $registry->addRecord(new Id(ToBeImplemented::class, 'idem', [42]), new Result(42));
+        $registry->addRecord(new CallId(ToBeImplemented::class, 'idem', [42]), new Result(42));
         $factory = new ReplayerFactory($registry);
 
         $replayer = $factory->createReplayer(ToBeImplemented::class);
@@ -62,12 +61,13 @@ class ReplayerTest extends TestCase
          */
 
         $this->expectException(\TypeError::class);
+        /** @noinspection PhpStrictTypeCheckingInspection */
         $replayer->idem(42);
     }
 
     public function test_returnTypeSafety() {
         $registry = new Registry(new Serializer());
-        $registry->addRecord(new Id(ToBeImplemented::class, 'idem', ['42']), new Result([42]));
+        $registry->addRecord(new CallId(ToBeImplemented::class, 'idem', ['42']), new Result([42]));
         $factory = new ReplayerFactory($registry);
 
         $replayer = $factory->createReplayer(ToBeImplemented::class);
@@ -82,7 +82,7 @@ class ReplayerTest extends TestCase
 
     public function test_returnTypeSafety_withImplicitCast() {
         $registry = new Registry(new Serializer());
-        $registry->addRecord(new Id(ToBeImplemented::class, 'idem', ['42']), new Result(42));
+        $registry->addRecord(new CallId(ToBeImplemented::class, 'idem', ['42']), new Result(42));
         $factory = new ReplayerFactory($registry);
 
         $replayer = $factory->createReplayer(ToBeImplemented::class);
@@ -96,8 +96,8 @@ class ReplayerTest extends TestCase
 
     public function test_callWithParameter() {
         $registry = new Registry(new Serializer());
-        $registry->addRecord(new Id(ToBeImplemented::class, 'idem', ['myString']), new Result('myString'));
-        $registry->addRecord(new Id(ToBeImplemented::class, 'idem', ['myString2']), new Result('myString2'));
+        $registry->addRecord(new CallId(ToBeImplemented::class, 'idem', ['myString']), new Result('myString'));
+        $registry->addRecord(new CallId(ToBeImplemented::class, 'idem', ['myString2']), new Result('myString2'));
         $factory = new ReplayerFactory($registry);
 
         $replayer = $factory->createReplayer(ToBeImplemented::class);
@@ -112,9 +112,9 @@ class ReplayerTest extends TestCase
 
     public function test_multipleCalls() {
         $registry = new Registry(new Serializer());
-        $registry->addRecord(new Id(ToBeImplemented::class, 'increment', []), new Result(0));
-        $registry->addRecord(new Id(ToBeImplemented::class, 'increment', []), new Result(1));
-        $registry->addRecord(new Id(ToBeImplemented::class, 'increment', []), new Result(2));
+        $registry->addRecord(new CallId(ToBeImplemented::class, 'increment', []), new Result(0));
+        $registry->addRecord(new CallId(ToBeImplemented::class, 'increment', []), new Result(1));
+        $registry->addRecord(new CallId(ToBeImplemented::class, 'increment', []), new Result(2));
         $factory = new ReplayerFactory($registry);
 
         $replayer = $factory->createReplayer(ToBeImplemented::class);
@@ -133,7 +133,7 @@ class ReplayerTest extends TestCase
 
     public function test_callWithException() {
         $registry = new Registry(new Serializer());
-        $registry->addRecord(new Id(ToBeImplemented::class, 'throwingMethod', []), new Result(null, new ExpectedException()));
+        $registry->addRecord(new CallId(ToBeImplemented::class, 'throwingMethod', []), new Result(null, new ExpectedException()));
         $factory = new ReplayerFactory($registry);
 
         $replayer = $factory->createReplayer(ToBeImplemented::class);
@@ -148,8 +148,8 @@ class ReplayerTest extends TestCase
 
     public function test_simpleRecursion() {
         $registry = new Registry(new Serializer());
-        $registry->addRecord(new Id(ToBeImplemented::class, 'me2', []), new Result(new ToBeDecorated()));
-        $registry->addRecord(new Id(ToBeDecorated::class, '__toString', [], ' > 0'), new Result('recursive_stringified'));
+        $registry->addRecord(new CallId(ToBeImplemented::class, 'me2', []), new Result(new ToBeDecorated()));
+        $registry->addRecord(new CallId(ToBeDecorated::class, '__toString', [], ' > 0'), new Result('recursive_stringified'));
         $factory = new ReplayerFactory($registry);
 
         $replayer = $factory->createReplayer(ToBeImplemented::class);

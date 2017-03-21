@@ -9,7 +9,7 @@ declare(strict_types = 1);
 namespace RePHPlay\Test;
 
 use PHPUnit\Framework\TestCase;
-use RePHPlay\Id;
+use RePHPlay\CallId;
 use RePHPlay\RecorderFactory;
 use RePHPlay\Registry;
 use RePHPlay\Serializer;
@@ -28,11 +28,11 @@ class RecorderTest extends TestCase
 
         $this->assertEquals(4, $recorder->get4());
         // check that the record was registered
-        $result = $registry->popRecord(new Id(ToBeDecorated::class, 'get4', []));
+        $result = $registry->popRecord(new CallId(ToBeDecorated::class, 'get4', []));
         $this->assertNotNull($result);
         $this->assertEquals(4, $result->getValue());
         // check that there is no more records
-        $result = $registry->popRecord(new Id(ToBeDecorated::class, 'get4', []));
+        $result = $registry->popRecord(new CallId(ToBeDecorated::class, 'get4', []));
         $this->assertNull($result);
     }
 
@@ -48,11 +48,11 @@ class RecorderTest extends TestCase
 
         $this->assertEquals([1, '2'], $recorder->extra(1, '2'));
         // check that the record was registered
-        $result = $registry->popRecord(new Id(ToBeDecorated::class, 'extra', [1, '2']));
+        $result = $registry->popRecord(new CallId(ToBeDecorated::class, 'extra', [1, '2']));
         $this->assertNotNull($result);
         $this->assertEquals([1, '2'], $result->getValue());
         // check that there is no more records
-        $result = $registry->popRecord(new Id(ToBeDecorated::class, 'extra', [1, '2']));
+        $result = $registry->popRecord(new CallId(ToBeDecorated::class, 'extra', [1, '2']));
         $this->assertNull($result);
     }
 
@@ -71,19 +71,19 @@ class RecorderTest extends TestCase
         $this->assertInstanceOf(ToBeDecorated::class, $result->me());
 
         // check that the record was registered
-        $result = $registry->popRecord(new Id(ToBeDecorated::class, 'me', []));
+        $result = $registry->popRecord(new CallId(ToBeDecorated::class, 'me', []));
         $this->assertNotNull($result);
         $this->assertInstanceOf(ToBeDecorated::class, $result->getValue());
         // check that there is no more records
-        $result = $registry->popRecord(new Id(ToBeDecorated::class, 'me', []));
+        $result = $registry->popRecord(new CallId(ToBeDecorated::class, 'me', []));
         $this->assertNull($result);
 
         // check that the record of the recursive mock was registered
-        $result = $registry->popRecord(new Id(ToBeDecorated::class, 'me', [], ' > 0'));
+        $result = $registry->popRecord(new CallId(ToBeDecorated::class, 'me', [], ' > 0'));
         $this->assertNotNull($result);
         $this->assertInstanceOf(ToBeDecorated::class, $result->getValue());
         // check that there is no more records
-        $result = $registry->popRecord(new Id(ToBeDecorated::class, 'me', [], ' > 0'));
+        $result = $registry->popRecord(new CallId(ToBeDecorated::class, 'me', [], ' > 0'));
         $this->assertNull($result);
     }
 
@@ -99,11 +99,11 @@ class RecorderTest extends TestCase
 
         $this->assertEquals('stringified', (string) $recorder);
         // check that the record was registered
-        $result = $registry->popRecord(new Id(ToBeDecorated::class, '__toString', []));
+        $result = $registry->popRecord(new CallId(ToBeDecorated::class, '__toString', []));
         $this->assertNotNull($result);
         $this->assertEquals('stringified', $result->getValue());
         // check that there is no more records
-        $result = $registry->popRecord(new Id(ToBeDecorated::class, '__toString', []));
+        $result = $registry->popRecord(new CallId(ToBeDecorated::class, '__toString', []));
         $this->assertNull($result);
     }
 
@@ -119,11 +119,11 @@ class RecorderTest extends TestCase
 
         $this->assertEquals(true, $recorder::staticFunc());
         // check that the record was registered
-        $result = $registry->popRecord(new Id(ToBeDecorated::class, 'staticFunc', []));
+        $result = $registry->popRecord(new CallId(ToBeDecorated::class, 'staticFunc', []));
         $this->assertNotNull($result);
         $this->assertEquals(true, $result->getValue());
         // check that there is no more records
-        $result = $registry->popRecord(new Id(ToBeDecorated::class, 'staticFunc', []));
+        $result = $registry->popRecord(new CallId(ToBeDecorated::class, 'staticFunc', []));
         $this->assertNull($result);
     }
 
@@ -145,7 +145,7 @@ class RecorderTest extends TestCase
         }
         $this->assertInstanceOf(ExpectedException::class, $caught);
         // check that the record was registered
-        $result = $registry->popRecord(new Id(ToBeDecorated::class, 'throwingMethod', []));
+        $result = $registry->popRecord(new CallId(ToBeDecorated::class, 'throwingMethod', []));
         $this->assertNotNull($result);
         // check that getting the value from the record throws the same exception again
         $caught = null;
@@ -171,19 +171,19 @@ class RecorderTest extends TestCase
         $this->assertEquals('myString2', $recorder->idem('myString2'));
 
         // check that the first record was registered
-        $result = $registry->popRecord(new Id(ToBeDecorated::class, 'idem', ['myString']));
+        $result = $registry->popRecord(new CallId(ToBeDecorated::class, 'idem', ['myString']));
         $this->assertNotNull($result);
         $this->assertEquals('myString', $result->getValue());
         // check that there is no more records
-        $result = $registry->popRecord(new Id(ToBeDecorated::class, 'idem', ['myString']));
+        $result = $registry->popRecord(new CallId(ToBeDecorated::class, 'idem', ['myString']));
         $this->assertNull($result);
 
         // check that the second record was registered
-        $result = $registry->popRecord(new Id(ToBeDecorated::class, 'idem', ['myString2']));
+        $result = $registry->popRecord(new CallId(ToBeDecorated::class, 'idem', ['myString2']));
         $this->assertNotNull($result);
         $this->assertEquals('myString2', $result->getValue());
         // check that there is no more records
-        $result = $registry->popRecord(new Id(ToBeDecorated::class, 'idem', ['myString2']));
+        $result = $registry->popRecord(new CallId(ToBeDecorated::class, 'idem', ['myString2']));
         $this->assertNull($result);
     }
 
@@ -198,6 +198,7 @@ class RecorderTest extends TestCase
          */
 
         $this->expectException(\TypeError::class);
+        /** @noinspection PhpStrictTypeCheckingInspection */
         $recorder->idem(42);
     }
 
@@ -216,22 +217,22 @@ class RecorderTest extends TestCase
         $this->assertEquals(2, $recorder->increment());
 
         // check that the first record was registered
-        $result = $registry->popRecord(new Id(ToBeDecorated::class, 'increment', []));
+        $result = $registry->popRecord(new CallId(ToBeDecorated::class, 'increment', []));
         $this->assertNotNull($result);
         $this->assertEquals(0, $result->getValue());
 
         // check that the second record was registered
-        $result = $registry->popRecord(new Id(ToBeDecorated::class, 'increment', []));
+        $result = $registry->popRecord(new CallId(ToBeDecorated::class, 'increment', []));
         $this->assertNotNull($result);
         $this->assertEquals(1, $result->getValue());
 
         // check that the third record was registered
-        $result = $registry->popRecord(new Id(ToBeDecorated::class, 'increment', []));
+        $result = $registry->popRecord(new CallId(ToBeDecorated::class, 'increment', []));
         $this->assertNotNull($result);
         $this->assertEquals(2, $result->getValue());
 
         // check that there is no more records
-        $result = $registry->popRecord(new Id(ToBeDecorated::class, 'get4', []));
+        $result = $registry->popRecord(new CallId(ToBeDecorated::class, 'get4', []));
         $this->assertNull($result);
     }
 }

@@ -25,13 +25,13 @@ class Registry
         $this->serializer = $serializer;
     }
 
-    public function addRecord(Id $id, Result $result)
+    public function addRecord(CallId $id, Result $result)
     {
         $key = $this->serializer->serialize($id);
         $this->data[$key][] = $result;
     }
 
-    public function popRecord(Id $id) : ?Result
+    public function popRecord(CallId $id): ?Result
     {
         $key = $this->serializer->serialize($id);
         if(!isset($this->data[$key]) || !count($this->data[$key])) {

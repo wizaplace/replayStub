@@ -10,7 +10,7 @@ namespace RePHPlay;
 
 class Serializer
 {
-    public function serialize(Id $id) : string
+    public function serialize(CallId $id): string
     {
         return serialize($id);
     }

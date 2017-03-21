@@ -12,27 +12,38 @@ trait Recorder
 {
     // Everything is static because it must be usable from static methods.
     // But actually, a new anonymous class is created for each mocked object, so these can be used as instance members.
+
+    /**
+     * @var array
+     */
     private static $records = [];
 
+    /**
+     * @var object
+     */
     private static $decoratedObject;
 
+    /**
+     * @var Registry
+     */
     private static $registry;
 
+    /**
+     * @var string
+     */
     private static $className;
 
+    /**
+     * @var RecorderFactory
+     */
     private static $recorderFactory;
 
+    /**
+     * @var ?string
+     */
     private static $instanceId;
 
-    public function RePHPlay_Init($decoratedObject, Registry $registry, string $className, RecorderFactory $recorderFactory, ?string $instanceId = null)
-    {
-        self::$decoratedObject = $decoratedObject;
-        self::$registry = $registry;
-        self::$className = $className;
-        self::$recorderFactory = $recorderFactory;
-        self::$instanceId = $instanceId;
-    }
-
+    /** @noinspection PhpUnusedPrivateMethodInspection */
     private static function RePHPlay_Record(string $name, array $arguments)
     {
         $thrown = null;
@@ -45,7 +56,7 @@ trait Recorder
 
         $result = new Result($returned, $thrown);
 
-        $id = new Id(self::$className, $name, $arguments, self::$instanceId);
+        $id = new CallId(self::$className, $name, $arguments, self::$instanceId);
 
         self::$registry->addRecord($id, $result);
 
@@ -58,5 +69,15 @@ trait Recorder
         }
 
         return $retVal;
+    }
+
+    /** @noinspection PhpUnusedPrivateMethodInspection */
+    private function RePHPlay_Init($decoratedObject, Registry $registry, string $className, RecorderFactory $recorderFactory, ?string $instanceId = null)
+    {
+        self::$decoratedObject = $decoratedObject;
+        self::$registry = $registry;
+        self::$className = $className;
+        self::$recorderFactory = $recorderFactory;
+        self::$instanceId = $instanceId;
     }
 }

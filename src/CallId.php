@@ -8,7 +8,7 @@ declare(strict_types = 1);
 
 namespace RePHPlay;
 
-final class Id
+final class CallId
 {
     /**
      * @var string
