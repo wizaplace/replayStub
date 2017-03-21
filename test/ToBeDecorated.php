@@ -12,6 +12,8 @@ namespace RePHPlay\Test;
  * Simple class only here for testing purposes
  */
 class ToBeDecorated implements ToBeImplemented {
+    public function __construct() {}
+
     public function get4() {
         return 4;
     }

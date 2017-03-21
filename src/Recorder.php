@@ -24,7 +24,7 @@ trait Recorder
 
     private static $instanceId;
 
-    public function __construct($decoratedObject, Registry $registry, string $className, RecorderFactory $recorderFactory, ?string $instanceId = null)
+    public function RePHPlay_Init($decoratedObject, Registry $registry, string $className, RecorderFactory $recorderFactory, ?string $instanceId = null)
     {
         self::$decoratedObject = $decoratedObject;
         self::$registry = $registry;

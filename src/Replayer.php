@@ -18,7 +18,7 @@ trait Replayer
 
     private static $instanceId;
 
-    public function __construct(string $className, Registry $registry, ReplayerFactory $replayerFactory, ?string $instanceId = null)
+    public function RePHPlay_Init(string $className, Registry $registry, ReplayerFactory $replayerFactory, ?string $instanceId = null)
     {
         self::$className = $className;
         self::$replayerFactory = $replayerFactory;

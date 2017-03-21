@@ -32,9 +32,17 @@ class ReplayerFactory
 return new class("{$reflection->getName()}", \$this->registry, \$this, \$instanceId) $extends {$reflection->getName()} {
     use \RePHPlay\Replayer;
 
+    public function __construct()
+    {
+        call_user_func_array([\$this, 'RePHPlay_Init'], func_get_args());
+    }
+
 EOT;
 
         foreach($reflection->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
+            if ($method->isConstructor()) {
+                continue;
+            }
             $static = $method->isStatic() ? 'static ' : '';
             $args = [];
             foreach ($method->getParameters() as $parameter) {

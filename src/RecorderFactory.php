@@ -33,9 +33,17 @@ class RecorderFactory
         $phpClass =<<<EOT
 return new class(\$decoratedObject, \$this->registry, "{$reflection->getName()}", \$this, \$instanceId) extends {$reflection->getName()} {
     use \RePHPlay\Recorder;
+    
+    public function __construct()
+    {
+        call_user_func_array([\$this, 'RePHPlay_Init'], func_get_args());
+    }
 
 EOT;
         foreach($reflection->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
+            if ($method->isConstructor()) {
+                continue;
+            }
             $static = $method->isStatic() ? 'static ' : '';
             $args = [];
             foreach ($method->getParameters() as $parameter) {
