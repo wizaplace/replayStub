@@ -10,7 +10,7 @@ namespace RePHPlay;
 
 use ReflectionMethod;
 
-class Mocker
+class RecorderFactory
 {
     /**
      * @var Registry

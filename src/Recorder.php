@@ -20,16 +20,16 @@ trait Recorder
 
     private static $className;
 
-    private static $mocker;
+    private static $recorderFactory;
 
     private static $instanceId;
 
-    public function __construct($decoratedObject, Registry $registry, string $className, Mocker $mocker, ?string $instanceId = null)
+    public function __construct($decoratedObject, Registry $registry, string $className, RecorderFactory $recorderFactory, ?string $instanceId = null)
     {
         self::$decoratedObject = $decoratedObject;
         self::$registry = $registry;
         self::$className = $className;
-        self::$mocker = $mocker;
+        self::$recorderFactory = $recorderFactory;
         self::$instanceId = $instanceId;
     }
 
@@ -53,7 +53,7 @@ trait Recorder
 
         if (is_object($retVal)) {
             static $i = 0;
-            $retVal = self::$mocker->createRecorder($retVal, self::$instanceId.' > '.$i);
+            $retVal = self::$recorderFactory->createRecorder($retVal, self::$instanceId.' > '.$i);
             $i++;
         }
 

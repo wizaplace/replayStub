@@ -10,7 +10,7 @@ namespace RePHPlay\Test;
 
 use PHPUnit\Framework\TestCase;
 use RePHPlay\Id;
-use RePHPlay\Mocker;
+use RePHPlay\RecorderFactory;
 use RePHPlay\Registry;
 use RePHPlay\Serializer;
 
@@ -18,9 +18,9 @@ class RecorderTest extends TestCase
 {
     public function testRecorder_simpleCall() {
         $registry = new Registry(new Serializer());
-        $mocker = new Mocker($registry);
+        $factory = new RecorderFactory($registry);
 
-        $recorder = $mocker->createRecorder(new ToBeDecorated());
+        $recorder = $factory->createRecorder(new ToBeDecorated());
         $this->assertInstanceOf(ToBeDecorated::class, $recorder);
         /**
          * @var ToBeDecorated $recorder
@@ -38,9 +38,9 @@ class RecorderTest extends TestCase
 
     public function testRecorder_callWithExtraArgs() {
         $registry = new Registry(new Serializer());
-        $mocker = new Mocker($registry);
+        $factory = new RecorderFactory($registry);
 
-        $recorder = $mocker->createRecorder(new ToBeDecorated());
+        $recorder = $factory->createRecorder(new ToBeDecorated());
         $this->assertInstanceOf(ToBeDecorated::class, $recorder);
         /**
          * @var ToBeDecorated $recorder
@@ -58,9 +58,9 @@ class RecorderTest extends TestCase
 
     public function testRecorder_simpleRecursion() {
         $registry = new Registry(new Serializer());
-        $mocker = new Mocker($registry);
+        $factory = new RecorderFactory($registry);
 
-        $recorder = $mocker->createRecorder(new ToBeDecorated());
+        $recorder = $factory->createRecorder(new ToBeDecorated());
         $this->assertInstanceOf(ToBeDecorated::class, $recorder);
         /**
          * @var ToBeDecorated $recorder
@@ -89,9 +89,9 @@ class RecorderTest extends TestCase
 
     public function testRecorder_toString() {
         $registry = new Registry(new Serializer());
-        $mocker = new Mocker($registry);
+        $factory = new RecorderFactory($registry);
 
-        $recorder = $mocker->createRecorder(new ToBeDecorated());
+        $recorder = $factory->createRecorder(new ToBeDecorated());
         $this->assertInstanceOf(ToBeDecorated::class, $recorder);
         /**
          * @var ToBeDecorated $recorder
@@ -109,9 +109,9 @@ class RecorderTest extends TestCase
 
     public function testRecorder_staticCall() {
         $registry = new Registry(new Serializer());
-        $mocker = new Mocker($registry);
+        $factory = new RecorderFactory($registry);
 
-        $recorder = $mocker->createRecorder(new ToBeDecorated());
+        $recorder = $factory->createRecorder(new ToBeDecorated());
         $this->assertInstanceOf(ToBeDecorated::class, $recorder);
         /**
          * @var ToBeDecorated $recorder
@@ -129,9 +129,9 @@ class RecorderTest extends TestCase
 
     public function testRecorder_callWithException() {
         $registry = new Registry(new Serializer());
-        $mocker = new Mocker($registry);
+        $factory = new RecorderFactory($registry);
 
-        $recorder = $mocker->createRecorder(new ToBeDecorated());
+        $recorder = $factory->createRecorder(new ToBeDecorated());
         $this->assertInstanceOf(ToBeDecorated::class, $recorder);
         /**
          * @var ToBeDecorated $recorder
@@ -159,9 +159,9 @@ class RecorderTest extends TestCase
 
     public function testRecorder_callWithParameter() {
         $registry = new Registry(new Serializer());
-        $mocker = new Mocker($registry);
+        $factory = new RecorderFactory($registry);
 
-        $recorder = $mocker->createRecorder(new ToBeDecorated());
+        $recorder = $factory->createRecorder(new ToBeDecorated());
         $this->assertInstanceOf(ToBeDecorated::class, $recorder);
         /**
          * @var ToBeDecorated $recorder
@@ -189,9 +189,9 @@ class RecorderTest extends TestCase
 
     public function testRecorder_typeSafety() {
         $registry = new Registry(new Serializer());
-        $mocker = new Mocker($registry);
+        $factory = new RecorderFactory($registry);
 
-        $recorder = $mocker->createRecorder(new ToBeDecorated());
+        $recorder = $factory->createRecorder(new ToBeDecorated());
         $this->assertInstanceOf(ToBeDecorated::class, $recorder);
         /**
          * @var ToBeDecorated $recorder
@@ -203,9 +203,9 @@ class RecorderTest extends TestCase
 
     public function testRecorder_multipleCalls() {
         $registry = new Registry(new Serializer());
-        $mocker = new Mocker($registry);
+        $factory = new RecorderFactory($registry);
 
-        $recorder = $mocker->createRecorder(new ToBeDecorated());
+        $recorder = $factory->createRecorder(new ToBeDecorated());
         $this->assertInstanceOf(ToBeDecorated::class, $recorder);
         /**
          * @var ToBeDecorated $recorder
