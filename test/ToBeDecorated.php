@@ -49,4 +49,9 @@ class ToBeDecorated implements ToBeImplemented {
     {
         return 'stringified';
     }
+
+    public function withDefault($param = 42) : int
+    {
+        return $param;
+    }
 };

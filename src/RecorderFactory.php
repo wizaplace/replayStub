@@ -40,7 +40,15 @@ EOT;
             $args = [];
             foreach ($method->getParameters() as $parameter) {
                 $type = self::formatArgType($parameter->getType(), $reflection->getName());
-                $args[] = "{$type} \${$parameter->getName()}";
+                $arg = "{$type} \${$parameter->getName()}";
+                if($parameter->isDefaultValueAvailable()) {
+                    if ($parameter->isDefaultValueConstant()) {
+                        $arg .=  ' = '.$parameter->getDefaultValueConstantName();
+                    } else {
+                        $arg .=  ' = '.var_export($parameter->getDefaultValue(), true);
+                    }
+                }
+                $args[] = $arg;
             }
             $args = implode(', ', $args);
             $phpClass .= "    public {$static}function {$method->getName()}($args) ";
