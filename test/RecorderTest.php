@@ -16,7 +16,7 @@ use RePHPlay\Serializer;
 
 class RecorderTest extends TestCase
 {
-    public function testRecorder_simpleCall() {
+    public function test_simpleCall() {
         $registry = new Registry(new Serializer());
         $factory = new RecorderFactory($registry);
 
@@ -36,7 +36,7 @@ class RecorderTest extends TestCase
         $this->assertNull($result);
     }
 
-    public function testRecorder_callWithExtraArgs() {
+    public function test_callWithExtraArgs() {
         $registry = new Registry(new Serializer());
         $factory = new RecorderFactory($registry);
 
@@ -56,7 +56,7 @@ class RecorderTest extends TestCase
         $this->assertNull($result);
     }
 
-    public function testRecorder_simpleRecursion() {
+    public function test_simpleRecursion() {
         $registry = new Registry(new Serializer());
         $factory = new RecorderFactory($registry);
 
@@ -87,7 +87,7 @@ class RecorderTest extends TestCase
         $this->assertNull($result);
     }
 
-    public function testRecorder_toString() {
+    public function test_toString() {
         $registry = new Registry(new Serializer());
         $factory = new RecorderFactory($registry);
 
@@ -107,7 +107,7 @@ class RecorderTest extends TestCase
         $this->assertNull($result);
     }
 
-    public function testRecorder_staticCall() {
+    public function test_staticCall() {
         $registry = new Registry(new Serializer());
         $factory = new RecorderFactory($registry);
 
@@ -127,7 +127,7 @@ class RecorderTest extends TestCase
         $this->assertNull($result);
     }
 
-    public function testRecorder_callWithException() {
+    public function test_callWithException() {
         $registry = new Registry(new Serializer());
         $factory = new RecorderFactory($registry);
 
@@ -157,7 +157,7 @@ class RecorderTest extends TestCase
         $this->assertInstanceOf(ExpectedException::class, $caught);
     }
 
-    public function testRecorder_callWithParameter() {
+    public function test_callWithParameter() {
         $registry = new Registry(new Serializer());
         $factory = new RecorderFactory($registry);
 
@@ -187,7 +187,7 @@ class RecorderTest extends TestCase
         $this->assertNull($result);
     }
 
-    public function testRecorder_typeSafety() {
+    public function test_typeSafety() {
         $registry = new Registry(new Serializer());
         $factory = new RecorderFactory($registry);
 
@@ -201,7 +201,7 @@ class RecorderTest extends TestCase
         $recorder->idem(42);
     }
 
-    public function testRecorder_multipleCalls() {
+    public function test_multipleCalls() {
         $registry = new Registry(new Serializer());
         $factory = new RecorderFactory($registry);
 

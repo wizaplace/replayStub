@@ -26,8 +26,10 @@ class ReplayerFactory
     {
         $reflection = new \ReflectionClass($className);
 
+        $extends = $reflection->isInterface() ? 'implements' : 'extends';
+
         $phpClass =<<<EOT
-return new class("{$reflection->getName()}", \$this->registry, \$this, \$instanceId) extends {$reflection->getName()} {
+return new class("{$reflection->getName()}", \$this->registry, \$this, \$instanceId) $extends {$reflection->getName()} {
     use \RePHPlay\Replayer;
 
 EOT;
