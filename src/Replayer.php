@@ -30,6 +30,11 @@ trait Replayer
      */
     private static $instanceId;
 
+    /**
+     * @var ChildrenPolicy
+     */
+    private static $childrenPolicy;
+
     /** @noinspection PhpUnusedPrivateMethodInspection */
     private static function RePHPlay_Play(string $name, array $arguments)
     {
@@ -42,7 +47,7 @@ trait Replayer
 
         $retVal = $result->getValue();
 
-        if (is_object($retVal)) {
+        if (is_object($retVal) && self::$childrenPolicy->shouldBeMocked($retVal)) {
             static $i = 0;
             $retVal = self::$replayerFactory->createReplayer(get_class($retVal), self::$instanceId.' > '.$i);
             $i++;
@@ -52,11 +57,12 @@ trait Replayer
     }
 
     /** @noinspection PhpUnusedPrivateMethodInspection */
-    private function RePHPlay_Init(string $className, Registry $registry, ReplayerFactory $replayerFactory, ?string $instanceId = null)
+    private function RePHPlay_Init(string $className, Registry $registry, ReplayerFactory $replayerFactory, ?string $instanceId, ChildrenPolicy $childrenPolicy)
     {
         self::$className = $className;
         self::$replayerFactory = $replayerFactory;
         self::$registry = $registry;
         self::$instanceId = $instanceId;
+        self::$childrenPolicy = $childrenPolicy;
     }
 }

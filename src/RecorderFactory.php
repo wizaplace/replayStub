@@ -9,6 +9,7 @@ declare(strict_types = 1);
 namespace RePHPlay;
 
 use ReflectionMethod;
+use RePHPlay\ChildrenPolicy\MockAll;
 
 class RecorderFactory
 {
@@ -17,13 +18,20 @@ class RecorderFactory
      */
     private $registry;
 
+    /**
+     * @var ChildrenPolicy
+     */
+    private $childrenPolicy;
+
     public function __construct(Registry $registry)
     {
         $this->registry = $registry;
+        $this->childrenPolicy = new MockAll();
     }
 
 
-    public function createRecorder($decoratedObject, ?string $instanceId = null)
+    public function createRecorder($decoratedObject, /** @noinspection PhpUnusedParameterInspection */
+                                   ?string $instanceId = null)
     {
         if(!is_object($decoratedObject)) {
             throw new \InvalidArgumentException('$decoratedObject must be an object, '.gettype($decoratedObject).' given.');
@@ -31,7 +39,7 @@ class RecorderFactory
         $reflection = new \ReflectionClass($decoratedObject);
 
         $phpClass =<<<EOT
-return new class(\$decoratedObject, \$this->registry, "{$reflection->getName()}", \$this, \$instanceId) extends {$reflection->getName()} {
+return new class(\$decoratedObject, \$this->registry, "{$reflection->getName()}", \$this, \$instanceId, \$this->childrenPolicy) extends {$reflection->getName()} {
     use \RePHPlay\Recorder;
     
     public function __construct()
@@ -73,5 +81,15 @@ EOT;
     private static function formatArgType(?\ReflectionType $type, string $className) : string {
         $str = (string) $type;
         return $str === 'self' ? $className : $str;
+    }
+
+    public function getChildrenPolicy(): ChildrenPolicy
+    {
+        return $this->childrenPolicy;
+    }
+
+    public function setChildrenPolicy(ChildrenPolicy $childrenPolicy)
+    {
+        $this->childrenPolicy = $childrenPolicy;
     }
 }

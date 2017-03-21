@@ -43,6 +43,11 @@ trait Recorder
      */
     private static $instanceId;
 
+    /**
+     * @var ChildrenPolicy
+     */
+    private static $childrenPolicy;
+
     /** @noinspection PhpUnusedPrivateMethodInspection */
     private static function RePHPlay_Record(string $name, array $arguments)
     {
@@ -62,7 +67,7 @@ trait Recorder
 
         $retVal = $result->getValue();
 
-        if (is_object($retVal)) {
+        if (is_object($retVal) && self::$childrenPolicy->shouldBeMocked($retVal)) {
             static $i = 0;
             $retVal = self::$recorderFactory->createRecorder($retVal, self::$instanceId.' > '.$i);
             $i++;
@@ -72,12 +77,13 @@ trait Recorder
     }
 
     /** @noinspection PhpUnusedPrivateMethodInspection */
-    private function RePHPlay_Init($decoratedObject, Registry $registry, string $className, RecorderFactory $recorderFactory, ?string $instanceId = null)
+    private function RePHPlay_Init($decoratedObject, Registry $registry, string $className, RecorderFactory $recorderFactory, ?string $instanceId, ChildrenPolicy $childrenPolicy)
     {
         self::$decoratedObject = $decoratedObject;
         self::$registry = $registry;
         self::$className = $className;
         self::$recorderFactory = $recorderFactory;
         self::$instanceId = $instanceId;
+        self::$childrenPolicy = $childrenPolicy;
     }
 }

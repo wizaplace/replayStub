@@ -9,6 +9,7 @@ declare(strict_types = 1);
 namespace RePHPlay;
 
 use ReflectionMethod;
+use RePHPlay\ChildrenPolicy\MockAll;
 
 class ReplayerFactory
 {
@@ -17,19 +18,26 @@ class ReplayerFactory
      */
     private $registry;
 
+    /**
+     * @var ChildrenPolicy
+     */
+    private $childrenPolicy;
+
     public function __construct(Registry $registry)
     {
         $this->registry = $registry;
+        $this->childrenPolicy = new MockAll();
     }
 
-    public function createReplayer(string $className, ?string $instanceId = null)
+    public function createReplayer(string $className, /** @noinspection PhpUnusedParameterInspection */
+                                   ?string $instanceId = null)
     {
         $reflection = new \ReflectionClass($className);
 
         $extends = $reflection->isInterface() ? 'implements' : 'extends';
 
         $phpClass =<<<EOT
-return new class("{$reflection->getName()}", \$this->registry, \$this, \$instanceId) $extends {$reflection->getName()} {
+return new class("{$reflection->getName()}", \$this->registry, \$this, \$instanceId, \$this->childrenPolicy) $extends {$reflection->getName()} {
     use \RePHPlay\Replayer;
 
     public function __construct()
@@ -72,5 +80,15 @@ EOT;
     private static function formatArgType(?\ReflectionType $type, string $className) : string {
         $str = (string) $type;
         return $str === 'self' ? $className : $str;
+    }
+
+    public function getChildrenPolicy(): ChildrenPolicy
+    {
+        return $this->childrenPolicy;
+    }
+
+    public function setChildrenPolicy(ChildrenPolicy $childrenPolicy)
+    {
+        $this->childrenPolicy = $childrenPolicy;
     }
 }
