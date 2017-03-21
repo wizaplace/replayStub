@@ -35,6 +35,14 @@ trait Replayer
             throw new UnexpectedCall("Unexpected call to $name");
         }
 
-        return $result->getValue();
+        $retVal = $result->getValue();
+
+        if (is_object($retVal)) {
+            static $i = 0;
+            $retVal = self::$replayerFactory->createReplayer(get_class($retVal), self::$instanceId.' > '.$i);
+            $i++;
+        }
+
+        return $retVal;
     }
 }

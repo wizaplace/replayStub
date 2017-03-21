@@ -145,22 +145,24 @@ class ReplayerTest extends TestCase
         $this->expectException(ExpectedException::class);
         $replayer->throwingMethod();
     }
+
+    public function test_simpleRecursion() {
+        $registry = new Registry(new Serializer());
+        $registry->addRecord(new Id(ToBeImplemented::class, 'me2', []), new Result(new ToBeDecorated()));
+        $registry->addRecord(new Id(ToBeDecorated::class, '__toString', [], ' > 0'), new Result('recursive_stringified'));
+        $factory = new ReplayerFactory($registry);
+
+        $replayer = $factory->createReplayer(ToBeImplemented::class);
+        $this->assertInstanceOf(ToBeImplemented::class, $replayer);
+        /**
+         * @var ToBeImplemented $replayer
+         */
+
+        $result = $replayer->me2();
+        $this->assertInstanceOf(ToBeImplemented::class, $result);
+
+        $this->assertEquals('recursive_stringified', (string) $result);
+    }
 }
 
-interface ToBeImplemented {
-    public function get4();
 
-    public function extra() : array;
-
-    public function throwingMethod();
-
-    public function idem(string $str) : string;
-
-    public function increment();
-
-    public static function staticFunc() : bool;
-
-    public function me() : self;
-
-    public function __toString() : string;
-}
