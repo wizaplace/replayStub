@@ -49,7 +49,7 @@ return new class(\$decoratedObject, \$this->registry, "{$reflection->getName()}"
 
 EOT;
         foreach($reflection->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
-            if ($method->isConstructor()) {
+            if ($method->isConstructor() || $method->isDestructor()) {
                 continue;
             }
             $static = $method->isStatic() ? 'static ' : '';

@@ -48,7 +48,7 @@ return new class("{$reflection->getName()}", \$this->registry, \$this, \$instanc
 EOT;
 
         foreach($reflection->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
-            if ($method->isConstructor()) {
+            if ($method->isConstructor() || $method->isDestructor()) {
                 continue;
             }
             $static = $method->isStatic() ? 'static ' : '';
