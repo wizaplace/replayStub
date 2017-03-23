@@ -6,7 +6,7 @@
  */
 declare(strict_types = 1);
 
-namespace RePHPlay\Test;
+namespace ReplayStub\Test;
 
 /**
  * Simple interface only here for testing purposes

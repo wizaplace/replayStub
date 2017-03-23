@@ -6,10 +6,10 @@
  * Time: 20:49
  */
 
-namespace RePHPlay\ChildrenPolicy;
+namespace ReplayStub\ChildrenPolicy;
 
 
-use RePHPlay\ChildrenPolicy;
+use ReplayStub\ChildrenPolicy;
 
 class MockNothing implements ChildrenPolicy
 {

@@ -1,5 +1,6 @@
 {
-    "name": "wizacha/rephplay",
+    "name": "wizacha/replaystub",
+    "description": "Allow for easy stubbing thanks to a recording object proxy and a replayer.",
     "type": "library",
     "authors": [
         {
@@ -9,12 +10,12 @@
     ],
     "autoload": {
         "psr-4": {
-            "RePHPlay\\": "src/"
+            "ReplayStub\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "RePHPlay\\Test\\": "test/"
+            "ReplayStub\\Test\\": "test/"
         }
     },
     "require": {},
@@ -22,6 +23,6 @@
         "phpunit/phpunit": "^6.0"
     },
     "scripts": {
-        "test": "docker run --rm -v $PWD:/usr/src/myapp rephplay php /usr/src/myapp/vendor/bin/phpunit --configuration /usr/src/myapp/phpunit.xml"
+        "test": "docker build -t replaystub . && docker run --rm -v $PWD:/usr/src/myapp replaystub php /usr/src/myapp/vendor/bin/phpunit --configuration /usr/src/myapp/phpunit.xml"
     }
 }

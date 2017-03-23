@@ -6,15 +6,15 @@
  */
 declare(strict_types = 1);
 
-namespace RePHPlay\Test;
+namespace ReplayStub\Test;
 
 use PHPUnit\Framework\TestCase;
-use RePHPlay\CallId;
-use RePHPlay\Registry;
-use RePHPlay\ReplayerFactory;
-use RePHPlay\Result;
-use RePHPlay\Serializer;
-use RePHPlay\UnexpectedCall;
+use ReplayStub\CallId;
+use ReplayStub\Registry;
+use ReplayStub\ReplayerFactory;
+use ReplayStub\Result;
+use ReplayStub\Serializer;
+use ReplayStub\UnexpectedCall;
 
 class ReplayerTest extends TestCase
 {

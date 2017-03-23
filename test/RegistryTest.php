@@ -6,13 +6,13 @@
  */
 declare(strict_types = 1);
 
-namespace RePHPlay\Test;
+namespace ReplayStub\Test;
 
 use PHPUnit\Framework\TestCase;
-use RePHPlay\CallId;
-use RePHPlay\Registry;
-use RePHPlay\Result;
-use RePHPlay\Serializer;
+use ReplayStub\CallId;
+use ReplayStub\Registry;
+use ReplayStub\Result;
+use ReplayStub\Serializer;
 
 class RegistryTest extends TestCase
 {

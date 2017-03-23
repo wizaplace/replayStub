@@ -6,7 +6,7 @@
  */
 declare(strict_types = 1);
 
-namespace RePHPlay;
+namespace ReplayStub;
 
 trait Replayer
 {
@@ -36,7 +36,7 @@ trait Replayer
     private static $childrenPolicy;
 
     /** @noinspection PhpUnusedPrivateMethodInspection */
-    private static function RePHPlay_Play(string $name, array $arguments)
+    private static function ReplayStub_Play(string $name, array $arguments)
     {
         $id = new CallId(self::$className, $name, $arguments, self::$instanceId);
 
@@ -57,7 +57,7 @@ trait Replayer
     }
 
     /** @noinspection PhpUnusedPrivateMethodInspection */
-    private function RePHPlay_Init(string $className, Registry $registry, ReplayerFactory $replayerFactory, ?string $instanceId, ChildrenPolicy $childrenPolicy)
+    private function ReplayStub_Init(string $className, Registry $registry, ReplayerFactory $replayerFactory, ?string $instanceId, ChildrenPolicy $childrenPolicy)
     {
         self::$className = $className;
         self::$replayerFactory = $replayerFactory;

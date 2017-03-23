@@ -6,10 +6,10 @@
  */
 declare(strict_types = 1);
 
-namespace RePHPlay\ChildrenPolicy;
+namespace ReplayStub\ChildrenPolicy;
 
 
-use RePHPlay\ChildrenPolicy;
+use ReplayStub\ChildrenPolicy;
 
 class MockAll implements ChildrenPolicy
 {

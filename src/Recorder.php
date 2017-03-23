@@ -6,7 +6,7 @@
  */
 declare(strict_types = 1);
 
-namespace RePHPlay;
+namespace ReplayStub;
 
 trait Recorder
 {
@@ -49,7 +49,7 @@ trait Recorder
     private static $childrenPolicy;
 
     /** @noinspection PhpUnusedPrivateMethodInspection */
-    private static function RePHPlay_Record(string $name, array $arguments)
+    private static function ReplayStub_Record(string $name, array $arguments)
     {
         $thrown = null;
         $returned = null;
@@ -77,7 +77,7 @@ trait Recorder
     }
 
     /** @noinspection PhpUnusedPrivateMethodInspection */
-    private function RePHPlay_Init($decoratedObject, Registry $registry, string $className, RecorderFactory $recorderFactory, ?string $instanceId, ChildrenPolicy $childrenPolicy)
+    private function ReplayStub_Init($decoratedObject, Registry $registry, string $className, RecorderFactory $recorderFactory, ?string $instanceId, ChildrenPolicy $childrenPolicy)
     {
         self::$decoratedObject = $decoratedObject;
         self::$registry = $registry;

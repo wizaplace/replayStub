@@ -6,10 +6,10 @@
  */
 declare(strict_types = 1);
 
-namespace RePHPlay;
+namespace ReplayStub;
 
 use ReflectionMethod;
-use RePHPlay\ChildrenPolicy\MockAll;
+use ReplayStub\ChildrenPolicy\MockAll;
 
 class RecorderFactory
 {
@@ -40,11 +40,11 @@ class RecorderFactory
 
         $phpClass =<<<EOT
 return new class(\$decoratedObject, \$this->registry, "{$reflection->getName()}", \$this, \$instanceId, \$this->childrenPolicy) extends {$reflection->getName()} {
-    use \RePHPlay\Recorder;
+    use \ReplayStub\Recorder;
     
     public function __construct()
     {
-        call_user_func_array([\$this, 'RePHPlay_Init'], func_get_args());
+        call_user_func_array([\$this, 'ReplayStub_Init'], func_get_args());
     }
 
 EOT;
@@ -72,7 +72,7 @@ EOT;
                 $type = self::formatArgType($method->getReturnType(), $reflection->getName());
                 $phpClass .= ": {$type} ";
             }
-            $phpClass .= "{ return self::RePHPlay_Record(__FUNCTION__, func_get_args()); }\n";
+            $phpClass .= "{ return self::ReplayStub_Record(__FUNCTION__, func_get_args()); }\n";
         }
         $phpClass .= '};';
         return eval($phpClass);

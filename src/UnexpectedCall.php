@@ -6,7 +6,7 @@
  */
 declare(strict_types = 1);
 
-namespace RePHPlay;
+namespace ReplayStub;
 
 class UnexpectedCall extends \Exception
 {
@@ -18,7 +18,7 @@ class UnexpectedCall extends \Exception
     public function __construct(CallId $id)
     {
         $this->id = $id;
-        $message = 'Unexpected call to a RePHPlay mock. The registry does not contain a result for this call:';
+        $message = 'Unexpected call to a ReplayStub mock. The registry does not contain a result for this call:';
         $message .= " {$id->getClass()}::{$id->getMethod()}(" . implode(', ', array_map([$this, 'arg2String'], $id->getArgs())) . ")";
         if (!is_null($id->getInstanceId())) {
             $message .= " [instanceId: {$id->getInstanceId()}]";
