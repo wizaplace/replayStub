@@ -1,6 +1,6 @@
 {
     "name": "wizacha/replaystub",
-    "description": "Allow for easy stubbing thanks to a recording object proxy and a replayer.",
+    "description": "Allow for easy stubbing thanks to a recording object-proxy and a replayer.",
     "type": "library",
     "authors": [
         {
