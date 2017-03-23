@@ -8,7 +8,11 @@ declare(strict_types = 1);
 
 namespace ReplayStub;
 
-class Serializer
+/**
+ * Serialize `CallId`s
+ * Extend it if you want to filter some data, to allow for a looser matching.
+ */
+class CallIdSerializer
 {
     public function serialize(CallId $id): string
     {

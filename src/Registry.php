@@ -16,11 +16,11 @@ class Registry
     private $data = [];
 
     /**
-     * @var Serializer
+     * @var CallIdSerializer
      */
     private $serializer;
 
-    public function __construct(Serializer $serializer)
+    public function __construct(CallIdSerializer $serializer)
     {
         $this->serializer = $serializer;
     }
