@@ -1,3 +1,4 @@
 /vendor/
 /.idea/
+# see https://github.com/composer/composer/issues/2461
 composer.lock
