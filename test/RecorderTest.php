@@ -12,12 +12,12 @@ use PHPUnit\Framework\TestCase;
 use ReplayStub\CallId;
 use ReplayStub\RecorderFactory;
 use ReplayStub\Registry;
-use ReplayStub\Serializer;
+use ReplayStub\CallIdSerializer;
 
 class RecorderTest extends TestCase
 {
     public function test_simpleCall() {
-        $registry = new Registry(new Serializer());
+        $registry = new Registry(new CallIdSerializer());
         $factory = new RecorderFactory($registry);
 
         $recorder = $factory->createRecorder(new ToBeDecorated());
@@ -37,7 +37,7 @@ class RecorderTest extends TestCase
     }
 
     public function test_callWithExtraArgs() {
-        $registry = new Registry(new Serializer());
+        $registry = new Registry(new CallIdSerializer());
         $factory = new RecorderFactory($registry);
 
         $recorder = $factory->createRecorder(new ToBeDecorated());
@@ -58,7 +58,7 @@ class RecorderTest extends TestCase
 
     public function test_simpleChild()
     {
-        $registry = new Registry(new Serializer());
+        $registry = new Registry(new CallIdSerializer());
         $factory = new RecorderFactory($registry);
 
         $recorder = $factory->createRecorder(new ToBeDecorated());
@@ -89,7 +89,7 @@ class RecorderTest extends TestCase
     }
 
     public function test_toString() {
-        $registry = new Registry(new Serializer());
+        $registry = new Registry(new CallIdSerializer());
         $factory = new RecorderFactory($registry);
 
         $recorder = $factory->createRecorder(new ToBeDecorated());
@@ -109,7 +109,7 @@ class RecorderTest extends TestCase
     }
 
     public function test_staticCall() {
-        $registry = new Registry(new Serializer());
+        $registry = new Registry(new CallIdSerializer());
         $factory = new RecorderFactory($registry);
 
         $recorder = $factory->createRecorder(new ToBeDecorated());
@@ -129,7 +129,7 @@ class RecorderTest extends TestCase
     }
 
     public function test_callWithException() {
-        $registry = new Registry(new Serializer());
+        $registry = new Registry(new CallIdSerializer());
         $factory = new RecorderFactory($registry);
 
         $recorder = $factory->createRecorder(new ToBeDecorated());
@@ -159,7 +159,7 @@ class RecorderTest extends TestCase
     }
 
     public function test_callWithParameter() {
-        $registry = new Registry(new Serializer());
+        $registry = new Registry(new CallIdSerializer());
         $factory = new RecorderFactory($registry);
 
         $recorder = $factory->createRecorder(new ToBeDecorated());
@@ -189,7 +189,7 @@ class RecorderTest extends TestCase
     }
 
     public function test_typeSafety() {
-        $registry = new Registry(new Serializer());
+        $registry = new Registry(new CallIdSerializer());
         $factory = new RecorderFactory($registry);
 
         $recorder = $factory->createRecorder(new ToBeDecorated());
@@ -204,7 +204,7 @@ class RecorderTest extends TestCase
     }
 
     public function test_multipleCalls() {
-        $registry = new Registry(new Serializer());
+        $registry = new Registry(new CallIdSerializer());
         $factory = new RecorderFactory($registry);
 
         $recorder = $factory->createRecorder(new ToBeDecorated());

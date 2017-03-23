@@ -12,13 +12,13 @@ use PHPUnit\Framework\TestCase;
 use ReplayStub\CallId;
 use ReplayStub\Registry;
 use ReplayStub\Result;
-use ReplayStub\Serializer;
+use ReplayStub\CallIdSerializer;
 
 class RegistryTest extends TestCase
 {
     public function test_serialization()
     {
-        $registry = new Registry(new Serializer());
+        $registry = new Registry(new CallIdSerializer());
 
         $id = new CallId(self::class, 'myMethod', []);
         $idException = new CallId(self::class, 'myMethod2', []);
