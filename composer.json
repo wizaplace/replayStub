@@ -1,5 +1,5 @@
 {
-    "name": "wizacha/replaystub",
+    "name": "wizaplace/replaystub",
     "description": "Allow for easy stubbing thanks to a recording object-proxy and a replayer.",
     "type": "library",
     "authors": [
