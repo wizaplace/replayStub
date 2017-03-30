@@ -29,11 +29,6 @@ trait Recorder
     private static $registry;
 
     /**
-     * @var string
-     */
-    private static $className;
-
-    /**
      * @var RecorderFactory
      */
     private static $recorderFactory;
@@ -59,29 +54,30 @@ trait Recorder
             $thrown = $e;
         }
 
-        $result = new Result($returned, $thrown);
+        if (is_object($returned) && self::$childrenPolicy->shouldBeMocked($returned)) {
+            $result = new MockedResult(uniqid((string) self::$instanceId), $returned, $thrown);
+        } else {
+            $result = new Result($returned, $thrown);
+        }
 
-        $id = new CallId(self::$className, $name, $arguments, self::$instanceId);
+        $call = new Call($name, $arguments, $result, self::$instanceId);
 
-        self::$registry->addRecord($id, $result);
+        self::$registry->addCall($call);
 
-        $retVal = $result->getValue();
+        $retVal = $result->produce();
 
-        if (is_object($retVal) && self::$childrenPolicy->shouldBeMocked($retVal)) {
-            static $i = 0;
-            $retVal = self::$recorderFactory->createRecorder($retVal, self::$instanceId.' > '.$i);
-            $i++;
+        if ($result instanceof MockedResult) {
+            $retVal = self::$recorderFactory->createRecorder($retVal, $result->getInstanceId());
         }
 
         return $retVal;
     }
 
     /** @noinspection PhpUnusedPrivateMethodInspection */
-    private function ReplayStub_Init($decoratedObject, Registry $registry, string $className, RecorderFactory $recorderFactory, ?string $instanceId, ChildrenPolicy $childrenPolicy)
+    private function ReplayStub_Init($decoratedObject, Registry $registry, RecorderFactory $recorderFactory, ?string $instanceId, ChildrenPolicy $childrenPolicy)
     {
         self::$decoratedObject = $decoratedObject;
         self::$registry = $registry;
-        self::$className = $className;
         self::$recorderFactory = $recorderFactory;
         self::$instanceId = $instanceId;
         self::$childrenPolicy = $childrenPolicy;

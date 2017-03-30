@@ -11,33 +11,21 @@ namespace ReplayStub;
 class Registry
 {
     /**
-     * @var array
+     * @var Call[]
      */
     private $data = [];
 
+    public function addCall(Call $call)
+    {
+        $this->data[] = $call;
+    }
+
+
     /**
-     * @var CallIdSerializer
+     * @return Call[]
      */
-    private $serializer;
-
-    public function __construct(CallIdSerializer $serializer)
+    public function getData() : array
     {
-        $this->serializer = $serializer;
-    }
-
-    public function addRecord(CallId $id, Result $result)
-    {
-        $key = $this->serializer->serialize($id);
-        $this->data[$key][] = $result;
-    }
-
-    public function popRecord(CallId $id): ?Result
-    {
-        $key = $this->serializer->serialize($id);
-        if(!isset($this->data[$key]) || !count($this->data[$key])) {
-            return null;
-        }
-
-        return array_shift($this->data[$key]);
+        return $this->data;
     }
 }

@@ -8,7 +8,8 @@ declare(strict_types = 1);
 
 namespace ReplayStub;
 
-use ReflectionMethod;
+use Mockery\Expectation;
+use Mockery\Mock;
 use ReplayStub\ChildrenPolicy\MockAll;
 
 class ReplayerFactory
@@ -32,54 +33,34 @@ class ReplayerFactory
     public function createReplayer(string $className, /** @noinspection PhpUnusedParameterInspection */
                                    ?string $instanceId = null)
     {
-        $reflection = new \ReflectionClass($className);
+        $mock = \Mockery::mock($className);
+        /** @var Mock $mock */
 
-        $extends = $reflection->isInterface() ? 'implements' : 'extends';
-
-        $phpClass =<<<EOT
-return new class("{$reflection->getName()}", \$this->registry, \$this, \$instanceId, \$this->childrenPolicy) $extends {$reflection->getName()} {
-    use \ReplayStub\Replayer;
-
-    public function __construct()
-    {
-        call_user_func_array([\$this, 'ReplayStub_Init'], func_get_args());
-    }
-
-EOT;
-
-        foreach($reflection->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
-            if ($method->isConstructor() || $method->isDestructor()) {
+        $calls = $this->registry->getData();
+        foreach ($calls as $call) {
+            if ($call->getInstanceId() != $instanceId) {
                 continue;
             }
-            $static = $method->isStatic() ? 'static ' : '';
-            $args = [];
-            foreach ($method->getParameters() as $parameter) {
-                $type = self::formatArgType($parameter->getType(), $reflection->getName());
-                $arg = "{$type} \${$parameter->getName()}";
-                if($parameter->isDefaultValueAvailable()) {
-                    if ($parameter->isDefaultValueConstant()) {
-                        $arg .=  ' = '.$parameter->getDefaultValueConstantName();
-                    } else {
-                        $arg .=  ' = '.var_export($parameter->getDefaultValue(), true);
-                    }
-                }
-                $args[] = $arg;
-            }
-            $args = implode(', ', $args);
-            $phpClass .= "    public {$static}function {$method->getName()}($args) ";
-            if ($method->hasReturnType()) {
-                $type = self::formatArgType($method->getReturnType(), $reflection->getName());
-                $phpClass .= ": {$type} ";
-            }
-            $phpClass .= "{ return self::ReplayStub_Play(__FUNCTION__, func_get_args()); }\n";
-        }
-        $phpClass .= '};';
-        return eval($phpClass);
-    }
 
-    private static function formatArgType(?\ReflectionType $type, string $className) : string {
-        $str = (string) $type;
-        return $str === 'self' ? $className : $str;
+            $mockedCall = call_user_func_array([$mock->expects(), $call->getMethod()], $call->getArgs());
+            /** @var Expectation $mockedCall */
+            $mockedCall->once();
+            $mockedCall->ordered($instanceId);
+
+            $result = $call->getResult();
+            $exception = $result->getException();
+            if (is_null($exception)) {
+                $retVal = $result->produce();
+                if ($result instanceof MockedResult) {
+                    $retVal = $this->createReplayer(get_class($retVal), $result->getInstanceId());
+                }
+
+                $mockedCall->andReturn($retVal);
+            } else {
+                $mockedCall->andThrow($exception);
+            }
+        }
+        return $mock;
     }
 
     public function getChildrenPolicy(): ChildrenPolicy

@@ -18,7 +18,9 @@
             "ReplayStub\\Test\\": "test/"
         }
     },
-    "require": {},
+    "require": {
+        "mockery/mockery": "dev-master"
+    },
     "require-dev": {
         "phpunit/phpunit": "^6.0"
     },
