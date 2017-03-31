@@ -8,13 +8,8 @@ declare(strict_types = 1);
 
 namespace ReplayStub;
 
-final class CallId
+final class Call
 {
-    /**
-     * @var string
-     */
-    private $class;
-
     /**
      * @var string
      */
@@ -26,24 +21,21 @@ final class CallId
     private $args;
 
     /**
+     * @var Result
+     */
+    private $result;
+
+    /**
      * @var null|string
      */
     private $instanceId;
 
-    public function __construct(string $class, string $method, array $args, ?string $instanceId = null)
+    public function __construct(string $method, array $args, Result $result, ?string $instanceId = null)
     {
-        $this->class = $class;
         $this->method = $method;
         $this->args = $args;
+        $this->result = $result;
         $this->instanceId = $instanceId;
-    }
-
-    /**
-     * @return string
-     */
-    public function getClass(): string
-    {
-        return $this->class;
     }
 
     /**
@@ -60,6 +52,14 @@ final class CallId
     public function getArgs(): array
     {
         return $this->args;
+    }
+
+    /**
+     * @return Result
+     */
+    public function getResult(): Result
+    {
+        return $this->result;
     }
 
     /**

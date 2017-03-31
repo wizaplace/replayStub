@@ -39,7 +39,7 @@ class RecorderFactory
         $reflection = new \ReflectionClass($decoratedObject);
 
         $phpClass =<<<EOT
-return new class(\$decoratedObject, \$this->registry, "{$reflection->getName()}", \$this, \$instanceId, \$this->childrenPolicy) extends {$reflection->getName()} {
+return new class(\$decoratedObject, \$this->registry, \$this, \$instanceId, \$this->childrenPolicy) extends {$reflection->getName()} {
     use \ReplayStub\Recorder;
     
     public function __construct()

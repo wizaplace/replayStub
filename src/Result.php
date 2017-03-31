@@ -26,12 +26,17 @@ class Result
         $this->exception = $exception;
     }
 
-    public function getValue()
+    public function produce()
     {
         if (!is_null($this->exception)) {
             throw $this->exception;
         }
 
         return $this->value;
+    }
+
+    public function getException() : ?\Exception
+    {
+        return $this->exception;
     }
 }

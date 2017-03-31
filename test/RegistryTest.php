@@ -9,28 +9,31 @@ declare(strict_types = 1);
 namespace ReplayStub\Test;
 
 use PHPUnit\Framework\TestCase;
-use ReplayStub\CallId;
+use ReplayStub\Call;
+use ReplayStub\CallIdSerializer;
 use ReplayStub\Registry;
 use ReplayStub\Result;
-use ReplayStub\CallIdSerializer;
 
 class RegistryTest extends TestCase
 {
     public function test_serialization()
     {
-        $registry = new Registry(new CallIdSerializer());
+        $registry = new Registry();
 
-        $id = new CallId(self::class, 'myMethod', []);
-        $idException = new CallId(self::class, 'myMethod2', []);
+        $call = new Call('myMethod', [], new Result(4));
+        $callException = new Call('myMethod2', [], new Result(null, new ExpectedException()));
 
-        $registry->addRecord($id, new Result(4));
-        $registry->addRecord($idException, new Result(null, new ExpectedException()));
+        $registry->addCall($call);
+        $registry->addCall($callException);
 
-        $registry = unserialize(serialize($registry));
+        $registry = unserialize(serialize($registry), [Registry::class]);
+        /** @var Registry $registry */
 
-        $this->assertEquals(4, $registry->popRecord($id)->getValue());
+        $data = $registry->getData();
+        $this->assertCount(2, $data);
+        $this->assertEquals(4, $data[0]->getResult()->produce());
 
         $this->expectException(ExpectedException::class);
-        $registry->popRecord($idException)->getValue();
+        $data[1]->getResult()->produce();
     }
 }
