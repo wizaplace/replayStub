@@ -9,7 +9,9 @@ declare(strict_types = 1);
 namespace ReplayStub;
 
 use Mockery\Expectation;
-use Mockery\Mock;
+use Mockery\Generator\CachingGenerator;
+use Mockery\Generator\StringManipulationGenerator;
+use Mockery\Loader\EvalLoader;
 use ReplayStub\ChildrenPolicy\MockAll;
 
 class ReplayerFactory
@@ -24,17 +26,22 @@ class ReplayerFactory
      */
     private $childrenPolicy;
 
+    /**
+     * @var \Mockery\Container
+     */
+    private $mockeryContainer;
+
     public function __construct(Registry $registry)
     {
         $this->registry = $registry;
         $this->childrenPolicy = new MockAll();
+        $this->mockeryContainer = new \Mockery\Container(new CachingGenerator(StringManipulationGenerator::withDefaultPasses()), new EvalLoader());
     }
 
     public function createReplayer(string $className, /** @noinspection PhpUnusedParameterInspection */
                                    ?string $instanceId = null)
     {
-        $mock = \Mockery::mock($className);
-        /** @var Mock $mock */
+        $mock = $this->mockeryContainer->mock($className);
 
         $calls = $this->registry->getData();
         foreach ($calls as $call) {
@@ -61,6 +68,12 @@ class ReplayerFactory
             }
         }
         return $mock;
+    }
+
+    public function close() : void
+    {
+        $this->mockeryContainer->mockery_teardown();
+        $this->mockeryContainer->mockery_close();
     }
 
     public function getChildrenPolicy(): ChildrenPolicy

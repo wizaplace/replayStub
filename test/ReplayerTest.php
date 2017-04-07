@@ -32,7 +32,7 @@ class ReplayerTest extends TestCase
 
         $this->assertEquals(4, $replayer->get4());
         $this->expectException(InvalidCountException::class);
-        \Mockery::close();
+        $factory->close();
     }
 
     public function test_toString() {
