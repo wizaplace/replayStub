@@ -79,9 +79,13 @@ EOT;
         return eval($phpClass);
     }
 
-    private static function formatArgType(?\ReflectionType $type, string $className) : string {
+    private static function formatArgType(\ReflectionType $type, string $className) : string {
         $str = (string) $type;
-        return $str === 'self' ? $className : $str;
+        $str = $str === 'self' ? $className : $str;
+        if($type->allowsNull()) {
+            $str = '?'.$str;
+        }
+        return $str;
     }
 
     public function getChildrenPolicy(): ChildrenPolicy

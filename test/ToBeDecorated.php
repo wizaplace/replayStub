@@ -58,4 +58,8 @@ class ToBeDecorated implements ToBeImplemented {
     {
         return $param;
     }
+
+    public function nullable(?bool $param) : ?bool {
+        return $param;
+    }
 };
