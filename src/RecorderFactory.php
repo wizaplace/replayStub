@@ -58,7 +58,7 @@ EOT;
                 $reflectionType = $parameter->getType();
                 $type = $reflectionType ? self::formatArgType($reflectionType, $reflection->getName()) .' ' : '';
                 $arg = "{$type}\${$parameter->getName()}";
-                if($parameter->isDefaultValueAvailable()) {
+                if($parameter->isDefaultValueAvailable()) { // @FIXME : this returns false negatives for internals
                     if ($parameter->isDefaultValueConstant()) {
                         $arg .=  ' = '.$parameter->getDefaultValueConstantName();
                     } else {

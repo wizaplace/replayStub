@@ -182,4 +182,12 @@ class RecorderTest extends TestCase
         $this->assertEquals(new Call('increment', [], new Result(1)), $data[1]);
         $this->assertEquals(new Call('increment', [], new Result(2)), $data[2]);
     }
+
+    public function test_dateTimeImmutable() {
+        $this->markTestIncomplete('Can\'t create proxy for internals yet... @FIXME');
+        $registry = new Registry();
+        $factory = new RecorderFactory($registry);
+
+        $factory->createRecorder(new \DateTimeImmutable());
+    }
 }
