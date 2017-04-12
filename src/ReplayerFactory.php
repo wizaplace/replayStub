@@ -12,6 +12,7 @@ use Mockery\Expectation;
 use Mockery\Generator\CachingGenerator;
 use Mockery\Generator\StringManipulationGenerator;
 use Mockery\Loader\EvalLoader;
+use Mockery\Mock;
 use ReplayStub\ChildrenPolicy\MockAll;
 
 class ReplayerFactory
@@ -31,6 +32,11 @@ class ReplayerFactory
      */
     private $mockeryContainer;
 
+    /**
+     * @var Mock[]
+     */
+    private $replayers;
+
     public function __construct(Registry $registry)
     {
         $this->registry = $registry;
@@ -42,6 +48,7 @@ class ReplayerFactory
                                    ?string $instanceId = null)
     {
         $mock = $this->mockeryContainer->mock($className);
+        $this->replayers[$instanceId] = $mock;
 
         $calls = $this->registry->getData();
         foreach ($calls as $call) {
@@ -49,7 +56,17 @@ class ReplayerFactory
                 continue;
             }
 
-            $mockedCall = call_user_func_array([$mock->expects(), $call->getMethod()], $call->getArgs());
+            $args = array_map(function($arg) {
+                if ($arg instanceof MockedArg) {
+                    $instanceId = $arg->getInstanceId();
+                    if(isset($this->replayers[$instanceId])) {
+                        return $this->replayers[$instanceId];
+                    }
+                    throw new \Exception("Unknown instance ID '$instanceId'");
+                }
+            }, $call->getArgs());
+
+            $mockedCall = call_user_func_array([$mock->expects(), $call->getMethod()], $args);
             /** @var Expectation $mockedCall */
             $mockedCall->once();
             $mockedCall->ordered($instanceId);
@@ -67,6 +84,7 @@ class ReplayerFactory
                 $mockedCall->andThrow($exception);
             }
         }
+
         return $mock;
     }
 

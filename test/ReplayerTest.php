@@ -12,6 +12,7 @@ use Mockery\Exception\InvalidCountException;
 use Mockery\Exception\InvalidOrderException;
 use PHPUnit\Framework\TestCase;
 use ReplayStub\Call;
+use ReplayStub\MockedArg;
 use ReplayStub\MockedResult;
 use ReplayStub\Registry;
 use ReplayStub\ReplayerFactory;
@@ -164,5 +165,18 @@ class ReplayerTest extends TestCase
         $this->assertEquals(4, $replayer->get4());
         $this->expectException(InvalidOrderException::class);
         $this->assertEquals('myString', $replayer->idem('myString'));
+    }
+
+    public function test_replayYourself()
+    {
+        $registry = new Registry();
+        $registry->addCall(new Call('autoConsumption', [new MockedArg(null)], new Result(null)));
+        $factory = new ReplayerFactory($registry);
+
+        $replayer = $factory->createReplayer(ToBeImplemented::class);
+        $this->assertInstanceOf(ToBeImplemented::class, $replayer);
+        /** @var ToBeImplemented $replayer */
+
+        $replayer->autoConsumption($replayer);
     }
 }

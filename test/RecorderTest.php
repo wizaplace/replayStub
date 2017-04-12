@@ -11,6 +11,7 @@ namespace ReplayStub\Test;
 use PHPUnit\Framework\TestCase;
 use ReplayStub\Call;
 use ReplayStub\CallIdSerializer;
+use ReplayStub\MockedArg;
 use ReplayStub\MockedResult;
 use ReplayStub\RecorderFactory;
 use ReplayStub\Registry;
@@ -196,6 +197,21 @@ class RecorderTest extends TestCase
         $data = $registry->getData();
         $this->assertCount(1, $data);
         $this->assertEquals(new Call('nullable', [null], new Result(null)), $data[0]);
+    }
+
+    public function test_recordYourself() {
+        $registry = new Registry();
+        $factory = new RecorderFactory($registry);
+
+        $recorder = $factory->createRecorder(new ToBeDecorated());
+        $this->assertInstanceOf(ToBeDecorated::class, $recorder);
+        /** @var ToBeDecorated $recorder */
+
+        $this->assertEquals(null, $recorder->autoConsumption($recorder));
+        // check that the call was registered
+        $data = $registry->getData();
+        $this->assertCount(1, $data);
+        $this->assertEquals(new Call('autoConsumption', [new MockedArg(null)], new Result(null)), $data[0]);
     }
 
     public function test_dateTimeImmutable() {

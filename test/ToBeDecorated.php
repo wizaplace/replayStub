@@ -62,4 +62,6 @@ class ToBeDecorated implements ToBeImplemented {
     public function nullable(?bool $param) : ?bool {
         return $param;
     }
+
+    public function autoConsumption(ToBeImplemented $me) : void {}
 };

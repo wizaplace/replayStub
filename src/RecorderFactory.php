@@ -69,11 +69,14 @@ EOT;
             }
             $args = implode(', ', $args);
             $phpClass .= "    public {$static}function {$method->getName()}($args) ";
+            $isVoid = false;
             if ($method->hasReturnType()) {
                 $type = self::formatArgType($method->getReturnType(), $reflection->getName());
+                $isVoid = $type === 'void';
                 $phpClass .= ": {$type} ";
             }
-            $phpClass .= "{ return self::ReplayStub_Record(__FUNCTION__, func_get_args()); }\n";
+            $returnStr = $isVoid ? '' : 'return ';
+            $phpClass .= "{ {$returnStr}self::ReplayStub_Record(__FUNCTION__, func_get_args()); }\n";
         }
         $phpClass .= '};';
         return eval($phpClass);

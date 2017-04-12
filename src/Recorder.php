@@ -60,6 +60,16 @@ trait Recorder
             $result = new Result($returned, $thrown);
         }
 
+        $arguments = array_map(function($arg) {
+            if(is_object($arg)) {
+                if(method_exists($arg, 'ReplayStub_GetInstanceId')) {
+                    /** @var Recorder $arg */
+                    return new MockedArg($arg::ReplayStub_GetInstanceId());
+                }
+            }
+            return $arg;
+        },$arguments);
+
         $call = new Call($name, $arguments, $result, self::$instanceId);
 
         self::$registry->addCall($call);
@@ -71,6 +81,10 @@ trait Recorder
         }
 
         return $retVal;
+    }
+
+    public static function ReplayStub_GetInstanceId() : ?string {
+        return static::$instanceId;
     }
 
     /** @noinspection PhpUnusedPrivateMethodInspection */
