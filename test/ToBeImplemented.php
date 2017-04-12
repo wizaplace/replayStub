@@ -27,4 +27,6 @@ interface ToBeImplemented {
     public function me2() : self;
 
     public function __toString() : string;
+
+    public function withDefault($param = 42, $param2 = null, $param3 = false, $param4 = ToBeDecorated::SOME_CONST, $param5 = []) : int;
 }

@@ -52,7 +52,9 @@ class ToBeDecorated implements ToBeImplemented {
         return 'stringified';
     }
 
-    public function withDefault($param = 42) : int
+    public const SOME_CONST = 42;
+
+    public function withDefault($param = 42, $param2 = null, $param3 = false, $param4 = self::SOME_CONST, $param5 = []) : int
     {
         return $param;
     }
