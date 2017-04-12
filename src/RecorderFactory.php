@@ -55,8 +55,9 @@ EOT;
             $static = $method->isStatic() ? 'static ' : '';
             $args = [];
             foreach ($method->getParameters() as $parameter) {
-                $type = self::formatArgType($parameter->getType(), $reflection->getName());
-                $arg = "{$type} \${$parameter->getName()}";
+                $reflectionType = $parameter->getType();
+                $type = $reflectionType ? self::formatArgType($reflectionType, $reflection->getName()) .' ' : '';
+                $arg = "{$type}\${$parameter->getName()}";
                 if($parameter->isDefaultValueAvailable()) {
                     if ($parameter->isDefaultValueConstant()) {
                         $arg .=  ' = '.$parameter->getDefaultValueConstantName();
