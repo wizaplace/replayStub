@@ -64,6 +64,7 @@ class ReplayerFactory
                     }
                     throw new \Exception("Unknown instance ID '$instanceId'");
                 }
+                return $arg;
             }, $call->getArgs());
 
             $mockedCall = call_user_func_array([$mock->expects(), $call->getMethod()], $args);
