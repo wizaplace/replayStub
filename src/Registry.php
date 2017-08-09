@@ -8,7 +8,7 @@ declare(strict_types = 1);
 
 namespace ReplayStub;
 
-class Registry
+class Registry implements \JsonSerializable, \Serializable
 {
     /**
      * @var Call[]
@@ -27,5 +27,26 @@ class Registry
     public function getData() : array
     {
         return $this->data;
+    }
+
+    public function jsonSerialize(): array
+    {
+        return $this->data;
+    }
+
+    public function serialize(): string
+    {
+        return \serialize($this->data);
+    }
+
+    public function unserialize($serialized): void
+    {
+        $calls = \unserialize($serialized, [
+            'allowed_classes' => [ Call::class ],
+        ]);
+
+        foreach ($calls as $call) {
+            $this->addCall($call);
+        }
     }
 }
