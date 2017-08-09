@@ -8,7 +8,9 @@ declare(strict_types = 1);
 
 namespace ReplayStub;
 
-final class Call
+require_once(__DIR__.'/functions.php');
+
+final class Call implements \JsonSerializable, \Serializable
 {
     /**
      * @var string
@@ -32,10 +34,7 @@ final class Call
 
     public function __construct(string $method, array $args, Result $result, ?string $instanceId = null)
     {
-        $this->method = $method;
-        $this->args = $args;
-        $this->result = $result;
-        $this->instanceId = $instanceId;
+        $this->init($method, $args, $result, $instanceId);
     }
 
     /**
@@ -68,5 +67,42 @@ final class Call
     public function getInstanceId() : ?string
     {
         return $this->instanceId;
+    }
+
+    public function serialize(): string
+    {
+        return \serialize([
+            'method' => $this->getMethod(),
+            'args' => $this->getArgs(),
+            'result' => $this->getResult(),
+            'instanceId' => $this->getInstanceId(),
+        ]);
+    }
+
+    public function unserialize($serialized): void
+    {
+        $data = \unserialize($serialized, [
+            'allowed_classes' => true,
+        ]);
+
+        $this->init($data['method'], $data['args'], $data['result'], $data['instanceId'] ?? null);
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'method' => $this->getMethod(),
+            'args' => makeMixedValueJsonEncodable($this->getArgs()),
+            'result' => $this->getResult(),
+            'instanceId' => $this->getInstanceId(),
+        ];
+    }
+
+    private function init(string $method, array $args, Result $result, ?string $instanceId = null): void
+    {
+        $this->method = $method;
+        $this->args = $args;
+        $this->result = $result;
+        $this->instanceId = $instanceId;
     }
 }
