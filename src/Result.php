@@ -8,8 +8,6 @@ declare(strict_types = 1);
 
 namespace ReplayStub;
 
-require_once(__DIR__.'/functions.php');
-
 class Result implements \JsonSerializable, \Serializable
 {
     /**
@@ -59,15 +57,17 @@ class Result implements \JsonSerializable, \Serializable
             'allowed_classes' => true,
         ]);
 
-        $this->init($data['value'], $data['exception'] ?? null);
+        $this->init($data['value'] ?? null, $data['exception'] ?? null);
     }
 
-    public function jsonSerialize(): array
+    public function jsonSerialize()
     {
-        return [
-            'value' => makeMixedValueJsonEncodable($this->value),
-            'exception' => makeMixedValueJsonEncodable($this->exception),
-        ];
+        if (!is_null($this->exception)) {
+            return [
+                'exception' => is_null($this->exception) ? null : explode("\n", (string) $this->exception),
+            ];
+        }
+        return Utils::jsonEncodableFromMixedValue($this->value);
     }
 
     private function init($value, ?\Throwable $exception = null): void

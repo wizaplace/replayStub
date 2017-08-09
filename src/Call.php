@@ -8,8 +8,6 @@ declare(strict_types = 1);
 
 namespace ReplayStub;
 
-require_once(__DIR__.'/functions.php');
-
 final class Call implements \JsonSerializable, \Serializable
 {
     /**
@@ -92,7 +90,7 @@ final class Call implements \JsonSerializable, \Serializable
     {
         return [
             'method' => $this->getMethod(),
-            'args' => makeMixedValueJsonEncodable($this->getArgs()),
+            'args' => array_map('\ReplayStub\Utils::jsonEncodableFromMixedValue', $this->getArgs()),
             'result' => $this->getResult(),
             'instanceId' => $this->getInstanceId(),
         ];

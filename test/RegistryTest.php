@@ -10,7 +10,6 @@ namespace ReplayStub\Test;
 
 use PHPUnit\Framework\TestCase;
 use ReplayStub\Call;
-use ReplayStub\CallIdSerializer;
 use ReplayStub\Registry;
 use ReplayStub\Result;
 
@@ -20,7 +19,7 @@ class RegistryTest extends TestCase
     {
         $registry = new Registry();
 
-        $call = new Call('myMethod', [], new Result(4));
+        $call = new Call('myMethod', [1, 'a', ['b']], new Result(4));
         $callException = new Call('myMethod2', [], new Result(null, new ExpectedException()));
 
         $registry->addCall($call);
@@ -41,7 +40,7 @@ class RegistryTest extends TestCase
     {
         $registry = new Registry();
 
-        $call = new Call('myMethod', [], new Result(4));
+        $call = new Call('myMethod', [1, 'a', ['b']], new Result(4));
         $callException = new Call('myMethod2', [], new Result(null, new ExpectedException()));
 
         $registry->addCall($call);
