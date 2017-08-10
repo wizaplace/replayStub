@@ -15,7 +15,7 @@ class MockedResult extends Result
      */
     private $instanceId;
 
-    public function __construct(string $instanceId, $value, ?\Exception $exception = null)
+    public function __construct(string $instanceId, $value, ?\Throwable $exception = null)
     {
         $this->instanceId = $instanceId;
         parent::__construct($value, $exception);
@@ -27,5 +27,23 @@ class MockedResult extends Result
     public function getInstanceId(): string
     {
         return $this->instanceId;
+    }
+
+    public function serialize(): string
+    {
+        return \serialize([
+            'serializedParent' => parent::serialize(),
+            'instanceId' => $this->instanceId,
+        ]);
+    }
+
+    public function unserialize($serialized): void
+    {
+        $data = \unserialize($serialized, [
+            'allowed_classes' => false,
+        ]);
+
+        $this->instanceId = (string) $data['instanceId'];
+        parent::unserialize($data['serializedParent']);
     }
 }
